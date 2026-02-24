@@ -12,6 +12,12 @@ public class MoverHandle : MonoBehaviour
         Systems.InputSystem.ActionDefinitions.MoverDragEnd.Subscribe(OnMoverDragEnd);
     }
 
+    private void OnDestroy()
+    {
+        Systems.InputSystem.ActionDefinitions.MoverDragStart.Unsubscribe(OnMoverDragStart);
+        Systems.InputSystem.ActionDefinitions.MoverDragEnd.Unsubscribe(OnMoverDragEnd);
+    }
+
     private void OnMoverDragStart(MoverHandle handle)
     {
         if (handle == this)

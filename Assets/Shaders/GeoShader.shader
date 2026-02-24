@@ -114,7 +114,7 @@ Shader "Custom/GeoShader"
                 // NdotL: 1 = fully facing light, 0 or negative = facing away
                 half NdotL = dot(normal, mainLight.direction);
 
-                half shadowAmount = NdotL > 0 ? MainLightRealtimeShadow(IN.shadowCoords) : 1;
+                half shadowAmount = NdotL > 0 ? mainLight.shadowAttenuation : 1;
 
                 shadowAmount = clamp(shadowAmount, 0.6, 1);
                 

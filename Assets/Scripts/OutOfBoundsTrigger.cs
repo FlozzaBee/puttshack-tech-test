@@ -8,7 +8,6 @@ public class OutOfBoundsTrigger : MonoBehaviour
     {
         if (other.TryGetComponent(out BallManager _))
         {
-            Debug.Log("Out of bounds");
             BallManager.Instance.ReturnToLastSafePosition();
         }
     }

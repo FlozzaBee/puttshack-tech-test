@@ -18,6 +18,7 @@ public class Mover : MonoBehaviour
     [Tooltip("Max offset along axis from current position")]
     [SerializeField] private float _max;
     [SerializeField] private float _snappingSpeed = 10;
+    [SerializeField] private float _maxSpeed = 10;
     
     [Tooltip("Enable if the ball could rest on this mover")]
     [SerializeField] private bool _useRigidBody;
@@ -70,10 +71,14 @@ public class Mover : MonoBehaviour
             Vector3 newPointerVector = ray.GetPoint(enter);
         
             Vector3 delta = Vector3.Scale(newPointerVector - _pointerStartVector, MoverUtils.GetAxisVector(_axis));
-            Vector3 newPos = _startPositionVector;
-            newPos += delta;
-        
-            SetPosition(GetClampedNewPos(newPos));
+            Vector3 targetPosition = _startPositionVector;
+            targetPosition += delta;
+            targetPosition = GetClampedNewPos(targetPosition);
+
+
+            Vector3 newPosition = Vector3.MoveTowards(transform.position, targetPosition, _maxSpeed * Time.deltaTime);
+            
+            SetPosition(GetClampedNewPos(newPosition));
         }
 
         else

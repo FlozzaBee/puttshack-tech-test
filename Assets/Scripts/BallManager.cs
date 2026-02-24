@@ -24,14 +24,24 @@ public class BallManager : Singleton<BallManager>
     private float _hitEndedTimer;
 
     private Vector3 _lastSafeLocation;
+    public int Hits { get; private set; }
     
     void Start()
     {
-        Systems.InputSystem.ActionDefinitions.SwingStart.Subscribe(OnSwingStart);
-        Systems.InputSystem.ActionDefinitions.SwingEnd.Subscribe(OnSwingEnd);
-
         _rb = GetComponent<Rigidbody>();
         _lastSafeLocation = transform.position;
+    }
+
+    private void OnEnable()
+    {
+        Systems.InputSystem.ActionDefinitions.SwingStart.Subscribe(OnSwingStart);
+        Systems.InputSystem.ActionDefinitions.SwingEnd.Subscribe(OnSwingEnd);
+    }
+
+    private void OnDisable()
+    {
+        Systems.InputSystem.ActionDefinitions.SwingStart.Unsubscribe(OnSwingStart);
+        Systems.InputSystem.ActionDefinitions.SwingEnd.Unsubscribe(OnSwingEnd);
     }
 
     private void Update()
@@ -76,8 +86,9 @@ public class BallManager : Singleton<BallManager>
         {
             _updateSwing = true;
             _hitIndicatorPivot.gameObject.SetActive(true);
-            Debug.Log("Swing Started");
         }
+
+        Hits++;
     }
     
     private void OnSwingEnd()
@@ -88,7 +99,6 @@ public class BallManager : Singleton<BallManager>
             _hitIndicatorPivot.gameObject.SetActive(false);
             
             _rb.AddForce(_hitVector * -_hitForceMultiplier, ForceMode.Impulse);
-            Debug.Log("Swing Ended");
             _isMoving = true;
             _hitEndedTimer = 0;
         }
@@ -105,7 +115,7 @@ public class BallManager : Singleton<BallManager>
     {
         _rb.linearVelocity = Vector3.zero;
         _rb.angularVelocity = Vector3.zero;
-        transform.position = position;
+        _rb.position = position;
         _lastSafeLocation = position;
         _isMoving = false;
     }

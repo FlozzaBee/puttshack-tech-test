@@ -43,4 +43,21 @@ public class InputHandler : InputSystem_Actions.IPlayerActions
             Systems.InputSystem.ActionDefinitions.MoverDragEnd.Invoke();
         }
     }
+
+    public void OnRestart(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            GameplayManager.Instance.ResetGame();
+        }
+    }
+
+    public void OnSelectLevel(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            int value = Mathf.RoundToInt(context.ReadValue<float>());
+            GameplayManager.Instance.MoveToLevel(value - 1);
+        }
+    }
 }
